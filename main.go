@@ -112,6 +112,15 @@ func handlerGetUsers(s *state, cmd command) error {
 	return nil
 }
 
+func handlerAggregate(s *state, cmd command) error {
+	// if len(cmd.args) < 1 {
+	// 	return fmt.Errorf("feed URL not provided")
+	// }
+	// fmt.Print(fetchFeed(context.Background(), cmd.args[0]))
+	fmt.Print(fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml"))
+	return nil
+}
+
 func main() {
 	args := os.Args
 	cmdArgs := args[1:]
@@ -151,5 +160,6 @@ func main() {
 	initializedCommands.register("login", handlerLogin)
 	initializedCommands.register("reset", handlerReset)
 	initializedCommands.register("users", handlerGetUsers)
+	initializedCommands.register("agg", handlerAggregate)
 	initializedCommands.run(currentState, command{name: cmdArgs[0], args: cmdArgs[1:]})
 }
