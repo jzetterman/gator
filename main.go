@@ -121,6 +121,33 @@ func handlerAggregate(s *state, cmd command) error {
 	return nil
 }
 
+func handlerAddFeed(s *state, cmd command) error {
+	if len(cmd.args) < 2 {
+		return fmt.Errorf("feed name or url not provided")
+	}
+
+	user, err := s.db.GetUser(context.Background(), s.config.CurrentUserName)
+	if err != nil {
+		return err
+	}
+
+	feedParams := database.CreateFeedParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      cmd.args[0],
+		Url:       cmd.args[1],
+		UserID:    user.ID,
+	}
+	feed, err := s.db.CreateFeed(context.Background(), feedParams)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%v\n", feed)
+	return nil
+}
+
 func main() {
 	args := os.Args
 	cmdArgs := args[1:]
@@ -161,5 +188,10 @@ func main() {
 	initializedCommands.register("reset", handlerReset)
 	initializedCommands.register("users", handlerGetUsers)
 	initializedCommands.register("agg", handlerAggregate)
-	initializedCommands.run(currentState, command{name: cmdArgs[0], args: cmdArgs[1:]})
+	initializedCommands.register("addfeed", handlerAddFeed)
+	err = initializedCommands.run(currentState, command{name: cmdArgs[0], args: cmdArgs[1:]})
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
