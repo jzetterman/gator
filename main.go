@@ -156,6 +156,7 @@ func main() {
 	initializedCommands.register("feeds", handlerGetFeeds)
 	initializedCommands.register("follow", middlewareLoggedIn(handlerFollow))
 	initializedCommands.register("following", middlewareLoggedIn(handlerListFeedFollows))
+	initializedCommands.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 	err = initializedCommands.run(currentState, command{name: cmdArgs[0], args: cmdArgs[1:]})
 	if err != nil {
 		fmt.Println(err)
