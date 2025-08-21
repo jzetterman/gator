@@ -28,10 +28,3 @@ func (c *commands) run(s *state, cmd command) error {
 	}
 	return c.commandMap[cmd.name](s, cmd)
 }
-
-func (c *commands) agg(s *state, cmd command) error {
-	if _, ok := c.commandMap[cmd.name]; !ok {
-		return errors.New("command " + cmd.name + " not found")
-	}
-	return c.commandMap[cmd.name](s, cmd)
-}
