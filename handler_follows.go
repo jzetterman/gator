@@ -11,7 +11,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 1 {
 		return errors.New("follow command requires exactly one argument")
 	}
@@ -51,7 +51,7 @@ func setFeedFollowed(s *state, feedURL string) (database.CreateFeedFollowRow, er
 	return followDetails, nil
 }
 
-func handlerFollowing(s *state, cmd command) error {
+func handlerListFeedFollows(s *state, cmd command, user database.User) error {
 	currentUser, err := s.db.GetUser(context.Background(), s.config.CurrentUserName)
 	if err != nil {
 		return fmt.Errorf("error getting current user: %w", err)

@@ -152,10 +152,10 @@ func main() {
 	initializedCommands.register("reset", handlerReset)
 	initializedCommands.register("users", handlerGetUsers)
 	initializedCommands.register("agg", handlerAggregate)
-	initializedCommands.register("addfeed", handlerAddFeed)
+	initializedCommands.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	initializedCommands.register("feeds", handlerGetFeeds)
-	initializedCommands.register("follow", handlerFollow)
-	initializedCommands.register("following", handlerFollowing)
+	initializedCommands.register("follow", middlewareLoggedIn(handlerFollow))
+	initializedCommands.register("following", middlewareLoggedIn(handlerListFeedFollows))
 	err = initializedCommands.run(currentState, command{name: cmdArgs[0], args: cmdArgs[1:]})
 	if err != nil {
 		fmt.Println(err)
