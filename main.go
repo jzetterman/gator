@@ -112,42 +112,6 @@ func handlerGetUsers(s *state, cmd command) error {
 	return nil
 }
 
-func handlerAggregate(s *state, cmd command) error {
-	// if len(cmd.args) < 1 {
-	// 	return fmt.Errorf("feed URL not provided")
-	// }
-	// fmt.Print(fetchFeed(context.Background(), cmd.args[0]))
-	fmt.Print(fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml"))
-	return nil
-}
-
-func handlerAddFeed(s *state, cmd command) error {
-	if len(cmd.args) < 2 {
-		return fmt.Errorf("feed name or url not provided")
-	}
-
-	user, err := s.db.GetUser(context.Background(), s.config.CurrentUserName)
-	if err != nil {
-		return err
-	}
-
-	feedParams := database.CreateFeedParams{
-		ID:        uuid.New(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Name:      cmd.args[0],
-		Url:       cmd.args[1],
-		UserID:    user.ID,
-	}
-	feed, err := s.db.CreateFeed(context.Background(), feedParams)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("%v\n", feed)
-	return nil
-}
-
 func main() {
 	args := os.Args
 	cmdArgs := args[1:]
@@ -189,6 +153,7 @@ func main() {
 	initializedCommands.register("users", handlerGetUsers)
 	initializedCommands.register("agg", handlerAggregate)
 	initializedCommands.register("addfeed", handlerAddFeed)
+	initializedCommands.register("feeds", handlerGetFeeds)
 	err = initializedCommands.run(currentState, command{name: cmdArgs[0], args: cmdArgs[1:]})
 	if err != nil {
 		fmt.Println(err)
